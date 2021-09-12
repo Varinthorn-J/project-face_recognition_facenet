@@ -1,0 +1,97 @@
+{% extends "bootstrap/base.html" %}
+
+{% block title %}
+Class Attendance
+{% endblock %}
+
+{% block styles %}
+{{super()}}
+<link rel="stylesheet" href="{{url_for('.static', filename='css/dashboard.css')}}">
+{% endblock %}
+
+{% block content %}
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+                aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="{{ url_for('dashboard') }}">Class Attendance</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
+                <li><a href="#">Profile</a></li>
+                <li><a href="{{ url_for('logout') }}">Log Out</a></li>
+            </ul>
+            <form class="navbar-form navbar-right">
+                <input type="text" class="form-control" placeholder="Search...">
+            </form>
+        </div>
+    </div>
+</nav>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-3 col-md-2 sidebar">
+            <ul class="nav nav-sidebar">
+                <!--  href="https://docs.google.com/spreadsheets/d/e/2PACX-1vT8V3E0gIb-odErfWP6OO2Litt0yUvU0WhwYJq4hgon_PsOfJlu7hOZxLEK_vJYiNzLg8t2BzvkSA3p/pubhtml"  // Overview-->
+                <li class="active"><a href="{{ url_for('dashboard') }}">Overview <span
+                            class="sr-only">(current)</span></a></li>
+
+
+                <li><a href="#" target="_blank">Show list</a></li>
+                <li><a href="{{url_for('download_file')}}" download> Download File</a></li>
+                <li><a href="dataset"> Dataset</a></li>
+                <li><a href="faces"> Recognition Image</a></li>
+                <li><a href="detect"> Video</a></li>
+            </ul>
+
+
+        </div>
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+
+            <div class="container">
+                <br>
+                <div class="content">
+                    <h2 align="center">Show List Student</h2>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+<!--
+<html>
+
+<head>
+  <title>Video Streaming Demonstration</title>
+</head>
+
+<body>
+  <div class="container">
+    <br>
+    <div class="content">
+      <h2 align="center">Video Streaming Demonstration</h2>
+    </div>
+    <div class="content" align="center">
+      <img width="50%" id="bg" src="{{ url_for('dataset_feed') }}">
+    </div>
+
+
+
+
+
+  </div>
+
+</body>
+
+</html>
+-->
