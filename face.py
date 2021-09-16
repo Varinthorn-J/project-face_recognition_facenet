@@ -71,7 +71,7 @@ def facenett(path,filename):
         image = Image.fromarray(face)
         image = image.resize((160,160))
         face_array = np.asarray(image)
-        #cv2.imwrite('./static/predict/{}.jpg'.format(filename),face_array)
+       # cv2.imwrite('./static/predict/{}.jpg'.format(filename),face_array) ################### close
         cv2.imwrite('./data/img_{}.jpg'.format(i),face_array)
     data = list()
     for i in glob.glob('data/*.jpg', recursive=True):

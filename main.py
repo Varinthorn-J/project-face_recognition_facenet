@@ -1,5 +1,5 @@
 import views
-from flask import Flask, Response , send_file
+from flask import Flask, Response, send_file
 from flask import render_template, request
 from PIL import Image, ImageDraw
 import os
@@ -9,10 +9,10 @@ from mtcnn.mtcnn import MTCNN
 import time
 from flask import Flask, render_template, redirect, url_for
 from flask_bootstrap import Bootstrap
-from flask_wtf import FlaskForm 
+from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField
 from wtforms.validators import InputRequired, Email, Length
-from flask_sqlalchemy  import SQLAlchemy
+from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from face import facenett
@@ -38,42 +38,45 @@ class User(UserMixin, db.Model):
     password = db.Column(db.String(80))
 
 
-app.add_url_rule('/base','base',views.base)
-app.add_url_rule('/','index',views.index)
-app.add_url_rule('/faceapp','faceapp',views.faceapp)
-app.add_url_rule('/showlist','showlist',views.showlist)
-app.add_url_rule('/faces','faces',views.faces,methods=['GET','POST'])
+app.add_url_rule('/base', 'base', views.base)
+app.add_url_rule('/', 'index', views.index)
+app.add_url_rule('/faceapp', 'faceapp', views.faceapp)
+app.add_url_rule('/showlist', 'showlist', views.showlist)
+app.add_url_rule('/faces', 'faces', views.faces, methods=['GET', 'POST'])
 
 
 @app.route('/download_file')
 def download_file():
     p = "book.xlsx"
-    return send_file(p,as_attachment=True)
+    return send_file(p, as_attachment=True)
 
 # @app.route('/showlist')
 # def showlist():
 #    return render_template('book2.html')
-   
- ######################################### input  video ####################                   
+
+ ######################################### input  video ####################
+
 @app.route('/dataset')
 def dataset():
     return render_template('dataset.html')
+
+
 def dataset():
     cap = cv2.VideoCapture(0)
     detector = MTCNN()
     img_id = 0
     count = 0
     while(True):
-        
+
         ret, frame = cap.read()
         if not ret:
             frame = cv2.VideoCapture(0)
             continue
-        
+
         if ret:
             frame = np.asarray(frame)
             count = count + 1
-            if count == 7 : ###################################### 5 ค่าเดิม
+            if count == 5:  # 5 ค่าเดิม
                 print(count)
                 try:
                     results = detector.detect_faces(frame)
@@ -86,21 +89,22 @@ def dataset():
                         pixels = np.asarray(frame)
                         face = pixels[y1:y2, x1:x2]
                         image = Image.fromarray(face)
-                        image = image.resize((160,160))
+                        image = image.resize((160, 160))
                         face_array = np.asarray(image)
-                        # เทรนข้อมูลตรงนี้ 
+                        # เทรนข้อมูลตรงนี้
                         ###########################################################################
-                        cv2.imwrite('./data/train\Warinthon/img_{}.jpg'.format(img_id),frame)  
-                        img_id +=1
-                        print("Done!!")
-               
+                        # cv2.imwrite('./data/train/Warinthon/img_{}.jpg'.format(img_id),frame)
+                        #img_id +=1
+                        # print("Done!")
+
                         ###########################################################################
                 except:
                     print("Something else went wrong")
         frame = cv2.imencode('.jpg', frame)[1].tobytes()
         yield (b'--frame\r\n'b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')
         # time.sleep(0.1)
-        
+
+
 @app.route('/dataset_feed')
 def dataset_feed():
     global video
@@ -111,6 +115,8 @@ def dataset_feed():
 @app.route('/detect')
 def detect():
     return render_template('detect.html')
+
+
 def detect():
     ########################################### video ##################
     cap = cv2.VideoCapture(0)
@@ -122,11 +128,11 @@ def detect():
         if not ret:
             frame = cv2.VideoCapture(0)
             continue
-        
+
         if ret:
             frame = np.asarray(frame)
             count = count+1
-            if count == 10 :
+            if count == 10:
 
                 try:
                     results = detector.detect_faces(frame)
@@ -137,34 +143,33 @@ def detect():
                         x1, y1, width, height = results[i]['box']
                         x1, y1 = abs(x1), abs(y1)
                         x2, y2 = x1 + width, y1 + height
-                        frame1 = cv2.rectangle(frame,(x1,y1),(x2,y2),(0,255,0),2) ################
+                        frame = cv2.rectangle( #################### frame1
+                            frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
                         pixels = np.asarray(frame)
                         face = pixels[y1:y2, x1:x2]
                         image = Image.fromarray(face)
-                        image = image.resize((160,160))
+                        image = image.resize((160, 160))
                         face_array = np.asarray(image)
-                       
-                        cv2.imwrite('./data/img_{}.jpg'.format(i),face_array)
+
+                        cv2.imwrite('./data/img_{}.jpg'.format(i), face_array)
                     facevideo()
                     #folder_path = (r'C:\Users\Por\Desktop\proj\data')
                     folder_path = (r'D:\2-2563\project\2\test\data')
-                    
+
                     test = os.listdir(folder_path)
                     for images in test:
                         if images.endswith(".jpg"):
                             os.remove(os.path.join(folder_path, images))
-                        
-                                
+
                 except:
-                    print("Something else went wrong")
-        
+                    print("unknow")
 
         frame = cv2.imencode('.jpg', frame)[1].tobytes()
         yield (b'--frame\r\n'b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')
-        
+
         time.sleep(0.1)
-        
-        
+
+
 @app.route('/detect_feed')
 def detect_feed():
     global video
@@ -172,22 +177,26 @@ def detect_feed():
                     mimetype='multipart/x-mixed-replace; boundary=frame')
 
 
-
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
 
+
 class LoginForm(FlaskForm):
-    username = StringField('username', validators=[InputRequired(), Length(min=4, max=15)])
-    password = PasswordField('password', validators=[InputRequired(), Length(min=8, max=80)])
+    username = StringField('username', validators=[
+                           InputRequired(), Length(min=4, max=15)])
+    password = PasswordField('password', validators=[
+                             InputRequired(), Length(min=8, max=80)])
     remember = BooleanField('remember me')
 
+
 class RegisterForm(FlaskForm):
-    email = StringField('email', validators=[InputRequired(), Email(message='Invalid email'), Length(max=50)])
-    username = StringField('username', validators=[InputRequired(), Length(min=4, max=15)])
-    password = PasswordField('password', validators=[InputRequired(), Length(min=8, max=80)])
-
-
+    email = StringField('email', validators=[InputRequired(), Email(
+        message='Invalid email'), Length(max=50)])
+    username = StringField('username', validators=[
+                           InputRequired(), Length(min=4, max=15)])
+    password = PasswordField('password', validators=[
+                             InputRequired(), Length(min=8, max=80)])
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -202,36 +211,40 @@ def login():
                 return redirect(url_for('dashboard'))
 
         return '<h1>Invalid username or password</h1>'
-        #return '<h1>' + form.username.data + ' ' + form.password.data + '</h1>'
+        # return '<h1>' + form.username.data + ' ' + form.password.data + '</h1>'
 
     return render_template('login.html', form=form)
+
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
     form = RegisterForm()
 
     if form.validate_on_submit():
-        hashed_password = generate_password_hash(form.password.data, method='sha256')
-        new_user = User(username=form.username.data, email=form.email.data, password=hashed_password)
+        hashed_password = generate_password_hash(
+            form.password.data, method='sha256')
+        new_user = User(username=form.username.data,
+                        email=form.email.data, password=hashed_password)
         db.session.add(new_user)
         db.session.commit()
 
         return '<h1>New user has been created!</h1>'
-        #return '<h1>' + form.username.data + ' ' + form.email.data + ' ' + form.password.data + '</h1>'
+        # return '<h1>' + form.username.data + ' ' + form.email.data + ' ' + form.password.data + '</h1>'
 
     return render_template('signup.html', form=form)
+
 
 @app.route('/dashboard')
 @login_required
 def dashboard():
     return render_template('dashboard.html', name=current_user.username)
 
+
 @app.route('/logout')
 @login_required
 def logout():
     logout_user()
     return redirect(url_for('index'))
-
 
 
 if __name__ == "__main__":
