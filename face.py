@@ -177,7 +177,7 @@ out_encoder.fit(trainy)
 trainy_enc = out_encoder.transform(trainy)
 testy_enc = out_encoder.transform(testy)
 model = SVC(kernel='linear', probability=True)
-model.fit(emdTrainX_norm, trainy_enc)
+model.fit(emdTrainX_norm, trainy_enc) ###
 yhat_train = model.predict(emdTrainX_norm)
 yhat_test = model.predict(emdTestX_norm)
 score_train = accuracy_score(trainy_enc, yhat_train)

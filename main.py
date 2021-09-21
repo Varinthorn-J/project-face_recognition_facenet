@@ -85,7 +85,8 @@ def dataset():
                         x1, y1, width, height = results[i]['box']
                         x1, y1 = abs(x1), abs(y1)
                         x2, y2 = x1 + width, y1 + height
-                       # frame = cv2.rectangle(frame,(x1,y1),(x2,y2),(0,255,0),2)
+                        # frame = cv2.rectangle(
+                        #     frame, (x1, y1), (x2, y2), (0, 200, 200), 2)
                         pixels = np.asarray(frame)
                         face = pixels[y1:y2, x1:x2]
                         image = Image.fromarray(face)
@@ -93,9 +94,10 @@ def dataset():
                         face_array = np.asarray(image)
                         # เทรนข้อมูลตรงนี้
                         ###########################################################################
-                        # cv2.imwrite('./data/train/Warinthon/img_{}.jpg'.format(img_id),frame)
-                        #img_id +=1
-                        # print("Done!")
+                        #cv2.imwrite(
+                        #   './data/train/Tannut/img_{}.jpg'.format(img_id), frame)
+                        #img_id += 1
+                        #print(img_id)
 
                         ###########################################################################
                 except:
@@ -154,7 +156,7 @@ def detect():
                         cv2.imwrite('./data/img_{}.jpg'.format(i), face_array)
                     facevideo()
                     #folder_path = (r'C:\Users\Por\Desktop\proj\data')
-                    folder_path = (r'D:\2-2563\project\2\test\data')
+                    folder_path = (r'D: \2-2563\project\2\test\data')
 
                     test = os.listdir(folder_path)
                     for images in test:
@@ -162,7 +164,7 @@ def detect():
                             os.remove(os.path.join(folder_path, images))
 
                 except:
-                    print("unknow")
+                    print("Something else went wrong")
 
         frame = cv2.imencode('.jpg', frame)[1].tobytes()
         yield (b'--frame\r\n'b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')

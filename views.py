@@ -37,7 +37,7 @@ def getname():
         filename=  f.filename
         path = os.path.join(UPLOAD_FLODER,filename)
         f.save(path)
-        name=facenet(path,filename)     
+        name = facenett(path, filename)  # facenet
     return name
     
 def faces():
