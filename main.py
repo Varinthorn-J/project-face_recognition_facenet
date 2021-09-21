@@ -19,7 +19,6 @@ from face import facenett
 from face import facevideo
 from face import detect
 
-
 app = Flask(__name__)
 
 app.config['SECRET_KEY'] = 'Thisissupposedtobesecret!'
@@ -41,7 +40,7 @@ class User(UserMixin, db.Model):
 app.add_url_rule('/base', 'base', views.base)
 app.add_url_rule('/', 'index', views.index)
 app.add_url_rule('/faceapp', 'faceapp', views.faceapp)
-app.add_url_rule('/showlist', 'showlist', views.showlist)
+# app.add_url_rule('/showlist', 'showlist', views.showlist)
 app.add_url_rule('/faces', 'faces', views.faces, methods=['GET', 'POST'])
 
 
@@ -50,11 +49,11 @@ def download_file():
     p = "book.xlsx"
     return send_file(p, as_attachment=True)
 
-# @app.route('/showlist')
-# def showlist():
-#    return render_template('book2.html')
 
- ######################################### input  video ####################
+@app.route('/showlist')
+def showlist():
+    return render_template('showlist.html')
+
 
 @app.route('/dataset')
 def dataset():
@@ -76,7 +75,7 @@ def dataset():
         if ret:
             frame = np.asarray(frame)
             count = count + 1
-            if count == 5:  # 5 ค่าเดิม
+            if count == 5:
                 print(count)
                 try:
                     results = detector.detect_faces(frame)
@@ -86,20 +85,15 @@ def dataset():
                         x1, y1 = abs(x1), abs(y1)
                         x2, y2 = x1 + width, y1 + height
                         # frame = cv2.rectangle(
-                        #     frame, (x1, y1), (x2, y2), (0, 200, 200), 2)
+                        #     frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
                         pixels = np.asarray(frame)
                         face = pixels[y1:y2, x1:x2]
                         image = Image.fromarray(face)
                         image = image.resize((160, 160))
                         face_array = np.asarray(image)
-                        # เทรนข้อมูลตรงนี้
-                        ###########################################################################
-                        #cv2.imwrite(
-                        #   './data/train/Tannut/img_{}.jpg'.format(img_id), frame)
-                        #img_id += 1
-                        #print(img_id)
+                        # cv2.imwrite('./datas/train/Warinthon/img_{}.jpg'.format(img_id),frame)
+                        # img_id +=1
 
-                        ###########################################################################
                 except:
                     print("Something else went wrong")
         frame = cv2.imencode('.jpg', frame)[1].tobytes()
@@ -120,7 +114,6 @@ def detect():
 
 
 def detect():
-    ########################################### video ##################
     cap = cv2.VideoCapture(0)
     detector = MTCNN()
     count = 0
@@ -145,7 +138,7 @@ def detect():
                         x1, y1, width, height = results[i]['box']
                         x1, y1 = abs(x1), abs(y1)
                         x2, y2 = x1 + width, y1 + height
-                        frame = cv2.rectangle( #################### frame1
+                        frame = cv2.rectangle(
                             frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
                         pixels = np.asarray(frame)
                         face = pixels[y1:y2, x1:x2]
@@ -155,9 +148,8 @@ def detect():
 
                         cv2.imwrite('./data/img_{}.jpg'.format(i), face_array)
                     facevideo()
-                    #folder_path = (r'C:\Users\Por\Desktop\proj\data')
-                    folder_path = (r'D: \2-2563\project\2\test\data')
 
+                    folder_path = (r'D:\2-2563\project\2\test')
                     test = os.listdir(folder_path)
                     for images in test:
                         if images.endswith(".jpg"):

@@ -20,8 +20,8 @@ def index():
 def faceapp():
     return render_template("faceapp.html")
 
-def showlist():
-    return render_template("showlist.html")
+# def showlist():
+#     return render_template("showlist.html")
 
 
 def getwidth(path):
