@@ -114,7 +114,7 @@ def detect():
 
 
 def detect():
-    cap = cv2.VideoCapture(0)
+    cap = cv2.VideoCapture('test1.mp4')
     detector = MTCNN()
     count = 0
     img_id = 0
