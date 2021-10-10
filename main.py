@@ -115,6 +115,7 @@ def detect():
 
 def detect():
     cap = cv2.VideoCapture('test1.mp4')
+   # cap = cv2.VideoCapture(0)
     detector = MTCNN()
     count = 0
     img_id = 0
@@ -127,7 +128,7 @@ def detect():
         if ret:
             frame = np.asarray(frame)
             count = count+1
-            if count == 10:
+            if count == 15:
 
                 try:
                     results = detector.detect_faces(frame)
